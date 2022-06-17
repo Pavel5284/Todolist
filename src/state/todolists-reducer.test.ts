@@ -1,19 +1,18 @@
 import {
     addTodolistAC, changeFilterAC,
-    changeTodolistTitleAC,
-    removeTodolistAC,
+    changeTodolistTitleAC, FilterValuesType,
+    removeTodolistAC, TodolistDomainType,
     todolistsReducer
 } from './todolists-reducer';
 import {v1} from 'uuid';
-import {FilterValuesType, TodolistType} from '../App';
 import {strict} from "assert";
 
 let todolistId1: string = v1();
 let todolistId2:string = v1();
 
-let startState: Array<TodolistType> = [
-    {id: todolistId1, title: "What to learn", filter: "all"},
-    {id: todolistId2, title: "What to buy", filter: "all"}
+let startState: Array<TodolistDomainType> = [
+    {id: todolistId1, title: "What to learn", filter: "all", addedDate: '', order: 0},
+    {id: todolistId2, title: "What to buy", filter: "all", addedDate: '', order: 0}
 ];
 
 /*beforeEach(() => {
