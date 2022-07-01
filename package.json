@@ -16,10 +16,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/uuid": "^8.3.4",
-<<<<<<< HEAD
     "axios": "^0.27.2",
-=======
->>>>>>> c63cd4c7e8abcfaedb972b3ee90da3158e48a524
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.0",
