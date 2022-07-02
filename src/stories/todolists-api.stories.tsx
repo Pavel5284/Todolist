@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {todolistsAPI, UpdateTaskType} from "../api/todolists-api";
-import {todolistId2} from "../state/todolists-reducer";
+import {todolistId2} from "../features/TodolistsList/todolists-reducer";
 
 export default {
     title: 'API'
