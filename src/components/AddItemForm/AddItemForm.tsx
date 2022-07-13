@@ -1,19 +1,20 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {IconButton, TextField} from "@mui/material";
+import {ControlPoint} from "@mui/icons-material";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
+    disabled?: boolean
 }
 
-export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
-
-    console.log("AddItemForm called")
+export const AddItemForm = React.memo(({addItem, disabled = false}: AddItemFormPropsType) => {
 
     let [title, setTitle] = useState("")
     let [error, setError] = useState<string | null>(null)
 
-    const addItem = () => {
+    const addItemHandler = () => {
         if (title.trim() !== "") {
-            props.addItem(title);
+            addItem(title);
             setTitle("");
         } else {
             setError("Title is required");
@@ -29,18 +30,24 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
             setError(null);
         }
         if (e.charCode === 13) {
-            addItem();
+            addItemHandler();
         }
     }
 
     return <div>
-        <input value={title}
-               onChange={onChangeHandler}
-               onKeyPress={onKeyPressHandler}
-               className={error ? "error" : ""}
+        <TextField variant="outlined"
+                   disabled={disabled}
+                   error={!!error}
+                   helperText={error}
+                   value={title}
+                   onChange={onChangeHandler}
+                   onKeyPress={onKeyPressHandler}
+                   className={error ? "error" : ""}
         />
-        <button onClick={addItem}>+</button>
-
-        {error && <div className="error-message">{error}</div>}
+        <IconButton color="primary" onClick={addItemHandler} disabled={disabled}
+                    style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}
+        >
+            <ControlPoint/>
+        </IconButton>
     </div>
 })
