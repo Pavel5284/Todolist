@@ -1,11 +1,14 @@
 import {appReducer, InitialStateType, setAppErrorAC, setAppStatusAC} from "./app-reducer";
+import {AuthInitialStateType} from "../features/Login/auth-reducer";
 
 let startState: InitialStateType;
 
 beforeEach(() => {
     startState = {
         error: null,
-        status: 'idle'
+        status: 'idle',
+        isInitialized: false,
+        isLoggedIn: false
     }
 })
 

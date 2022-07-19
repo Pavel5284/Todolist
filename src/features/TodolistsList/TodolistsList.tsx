@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from "react";
-import {AppRootStateType, useAppDispatch} from "./store";
+import {AppRootStateType, useAppDispatch} from "../../app/store";
 import {useSelector} from "react-redux";
 import {
     addTodolistTC,
@@ -9,17 +9,15 @@ import {
     FilterValuesType,
     removeTodolistTC,
     TodolistDomainType
-} from "../features/TodolistsList/todolists-reducer";
-import {addTaskTC, removeTaskTC, updateTaskTC} from "../features/TodolistsList/tasks-reducer";
-import {TaskStatuses} from "../api/todolists-api";
-import {RequestStatusType} from "./app-reducer";
-import {CustomizedSnackbars} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {AppBar, Button, Container, Grid, IconButton, LinearProgress, Toolbar, Typography} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import {AddItemForm} from "../components/AddItemForm/AddItemForm";
+} from "./todolists-reducer";
+import {addTaskTC, removeTaskTC, updateTaskTC} from "./tasks-reducer";
+import {TaskStatuses} from "../../api/todolists-api";
+import {Grid} from "@mui/material";
+import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import Paper from "@mui/material/Paper";
-import {Todolist} from "../features/TodolistsList/Todolist/Todolist";
-import {TasksStateType} from "./App";
+import {Todolist} from "./Todolist/Todolist";
+import {TasksStateType} from "../../app/App";
+import { Navigate } from "react-router-dom";
 
 
 type PropsType = {
@@ -30,10 +28,12 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
     const dispatch = useAppDispatch();
     const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+
 
 
     useEffect(() => {
-        if (demo) {
+        if (demo || !isLoggedIn) {
             return;
         }
         dispatch(fetchTodolistTC())
@@ -73,6 +73,9 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
         dispatch(thunk);
     }, [dispatch])
 
+    if (!isLoggedIn) {
+        return <Navigate to={"/login"} />
+    }
 
     return (
         <div>
