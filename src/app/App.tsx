@@ -52,7 +52,6 @@ export function App({demo = false}:PropsType) {
         <CircularProgress/>
         </div>
     }
-console.log(isLoggedIn)
 
     return (
         <BrowserRouter>
@@ -72,7 +71,7 @@ console.log(isLoggedIn)
                                 <MenuIcon/>
                             </IconButton>
                             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                                News
+                                News1
                             </Typography>
                             {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Log out</Button>}
                         </Toolbar>
