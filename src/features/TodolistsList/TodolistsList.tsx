@@ -55,7 +55,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
         dispatch(updateTaskTC(id, {title: newTitle}, todolistId))
     }, [dispatch])
     const changeFilter = useCallback((value: FilterValuesType, todolistId: string) => {
-        const action = changeTodolistFilterAC(value, todolistId)
+        const action = changeTodolistFilterAC({filter:value, id:todolistId})
         dispatch(action)
     }, [dispatch])
     const removeTodolist = useCallback((id: string) => {
@@ -88,7 +88,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
                         let tasksForTodolist = tasks[tl.id];
 
 
-                        return <Grid item>
+                        return <Grid item key={tl.id}>
                             <Paper style={{padding: "10px"}}>
                                 <Todolist
                                     todolist={tl}
