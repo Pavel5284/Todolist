@@ -33,7 +33,7 @@ const slice = createSlice({
             const tasks = state[action.payload.todolistId]
             const index = tasks.findIndex(t => t.id === action.payload.taskId)
             if (index > -1) {
-                tasks.slice(index, 1)
+                tasks.splice(index, 1)
             }
         },
         addTaskAC(state, action: PayloadAction<{task: TaskType}>) {

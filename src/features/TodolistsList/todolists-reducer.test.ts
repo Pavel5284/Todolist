@@ -17,20 +17,9 @@ let startState: Array<TodolistDomainType> = [
     {id: todolistId2, title: "What to buy", filter: "all", addedDate: '', order: 0, entityStatus: 'idle'}
 ];
 
-/*beforeEach(() => {
-    let todolistId1 = v1();
-    let todolistId2 = v1();
-
-    startState = [
-
-    ]
-})*/
 
 test('correct todolist should be removed', () => {
 
-
-
-    //const endState = todolistsReducer(startState, { type: 'REMOVE-TODOLIST', id: todolistId})
     const endState = todolistsReducer(startState, removeTodolistAC({todolistId:todolistId1}))
 
     expect(endState.length).toBe(1);
@@ -44,8 +33,6 @@ test('correct todolist should be added', () => {
         id: ''
     };
 
-
-   // const endState = todolistsReducer(startState, { type: 'ADD-TODOLIST', title: newTodolistTitle})
     const endState = todolistsReducer(startState, addTodolistAC({todolist:newTodolistTitle}))
 
     expect(endState.length).toBe(3);
@@ -55,13 +42,6 @@ test('correct todolist should be added', () => {
 test('correct todolist should change its name', () => {
 
     let newTodolistTitle = "New Todolist";
-
-
-    const action = {
-        type: 'CHANGE-TODOLIST-TITLE',
-        id: todolistId2,
-        title: newTodolistTitle
-    };
 
     const endState = todolistsReducer(startState, changeTodolistTitleAC({id:todolistId2, title:newTodolistTitle}));
 

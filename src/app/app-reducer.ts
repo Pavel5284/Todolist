@@ -6,8 +6,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 export const initialState: InitialStateType = {
     status: 'idle',
     error: null,
-    isInitialized: false,
-    isLoggedIn: false
+    isInitialized: false
 }
 const slice = createSlice({
     name: 'app',
@@ -36,8 +35,7 @@ export type InitialStateType = {
     // если произойдёт глобальная ошибка, текст ошибки запишется сюда
     error: string | null,
     //true когда приложение проинициализировалось
-    isInitialized: boolean,
-    isLoggedIn: boolean
+    isInitialized: boolean
 }
 
 

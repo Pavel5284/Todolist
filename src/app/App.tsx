@@ -15,10 +15,10 @@ import {
     Typography
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "./store";
 import {initializeAppTC, RequestStatusType} from "./app-reducer";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import {Login} from "../features/Login/Login";
 import { logoutTC } from '../features/Login/auth-reducer';
 
@@ -39,7 +39,10 @@ export function App({demo = false}:PropsType) {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(initializeAppTC())
+        if (!demo) {
+            dispatch(initializeAppTC())
+        }
+
     }, [])
 
     const logoutHandler = useCallback(() => {
@@ -54,7 +57,6 @@ export function App({demo = false}:PropsType) {
     }
 
     return (
-        <BrowserRouter>
             <div className="App">
 
                 <div>
@@ -91,8 +93,6 @@ export function App({demo = false}:PropsType) {
 
 
             </div>
-        </BrowserRouter>
-
     );
 }
 
