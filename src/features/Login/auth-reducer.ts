@@ -1,13 +1,56 @@
 import {Dispatch} from "redux";
 import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
-import {authAPI, LoginParamsType} from "../../api/todolists-api";
-import {handleServerAppError} from "../../utils/error-utils";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {authAPI, FieldErrorType, LoginParamsType} from "../../api/todolists-api";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AxiosError} from "axios";
 
 
 const initialState = {
     isLoggedIn: false
 }
+
+export const loginTC = createAsyncThunk <undefined, LoginParamsType, {
+    rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> }
+}>('auth/login', async (param, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({status:'loading'}))
+    const res = await authAPI.login(param)
+       try {
+           if (res.data.resultCode === 0) {
+               thunkAPI.dispatch(setAppStatusAC({status:'succeeded'}))
+               return
+           } else {
+               handleServerAppError(res.data, thunkAPI.dispatch);
+               return thunkAPI.rejectWithValue({errors:res.data.messages, fieldsErrors:res.data.fieldsErrors})
+           }
+       }
+        catch(error)  {
+            if (error instanceof Error) {
+                handleServerNetworkError(error, thunkAPI.dispatch);
+                return thunkAPI.rejectWithValue({errors: [error.message], fieldsErrors: undefined})
+            }
+        }
+})
+
+export const logoutTC = createAsyncThunk('auth/logout', async (param, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({status:'loading'}))
+    const res = await authAPI.logout()
+      try {
+          if (res.data.resultCode === 0) {
+              thunkAPI.dispatch(setAppStatusAC({status:'succeeded'}))
+              return {value:false}
+          } else {
+              handleServerAppError(res.data, thunkAPI.dispatch);
+              thunkAPI.rejectWithValue({})
+          }
+      }
+        catch(error) {
+            if (error instanceof Error) {
+                handleServerNetworkError(error, thunkAPI.dispatch);
+                return thunkAPI.rejectWithValue({error: [error.message], fieldsErrors: undefined})
+            }
+        }
+})
 
 const slice = createSlice({
     name: 'auth',
@@ -16,41 +59,20 @@ const slice = createSlice({
         setIsLoggedInAC(state, action: PayloadAction<{value: boolean}>) {
             state.isLoggedIn = action.payload.value
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(loginTC.fulfilled, (state,action) => {
+            state.isLoggedIn = true
+        })
+        builder.addCase(logoutTC.fulfilled, (state, action) => {
+            state.isLoggedIn = false
+        })
     }
 })
 export const authReducer = slice.reducer
 export const {setIsLoggedInAC} = slice.actions
 
 //thunks
-export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({status:'loading'}))
-    authAPI.login(data)
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setIsLoggedInAC({value:true}))
-                dispatch(setAppStatusAC({status:'succeeded'}))
-            } else {
-              handleServerAppError(res.data, dispatch);
-            }
-        })
-        .catch((error) => {
-            handleServerAppError(error, dispatch)
-        })
-}
-export const logoutTC = () => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC({status:'loading'}))
-    authAPI.logout()
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setIsLoggedInAC({value:false}))
-                dispatch(setAppStatusAC({status:'succeeded'}))
-            } else {
-              handleServerAppError(res.data, dispatch);
-            }
-        })
-        .catch((error) => {
-            handleServerAppError(error, dispatch)
-        })
-}
+
 
 
