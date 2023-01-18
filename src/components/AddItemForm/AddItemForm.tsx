@@ -1,9 +1,11 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {IconButton, TextField} from "@mui/material";
-import {ControlPoint} from "@mui/icons-material";
+import {AddBox} from "@mui/icons-material";
+
+export type AddItemFormSubmitHelperType = { setError: (error: string) => void, setTitle: (title: string) => void }
 
 type AddItemFormPropsType = {
-    addItem: (title: string) => void
+    addItem: (title: string, helper: AddItemFormSubmitHelperType) => void
     disabled?: boolean
 }
 
@@ -12,10 +14,9 @@ export const AddItemForm = React.memo(({addItem, disabled = false}: AddItemFormP
     let [title, setTitle] = useState("")
     let [error, setError] = useState<string | null>(null)
 
-    const addItemHandler = () => {
+    const addItemHandler = async () => {
         if (title.trim() !== "") {
-            addItem(title);
-            setTitle("");
+            addItem(title, {setError, setTitle});
         } else {
             setError("Title is required");
         }
@@ -42,12 +43,12 @@ export const AddItemForm = React.memo(({addItem, disabled = false}: AddItemFormP
                    value={title}
                    onChange={onChangeHandler}
                    onKeyPress={onKeyPressHandler}
-                   className={error ? "error" : ""}
+                   label="Title"
         />
         <IconButton color="primary" onClick={addItemHandler} disabled={disabled}
-                    style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}
+                    style={{marginLeft: '5px'}}
         >
-            <ControlPoint/>
+            <AddBox/>
         </IconButton>
     </div>
 })

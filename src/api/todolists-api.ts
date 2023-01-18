@@ -1,4 +1,6 @@
 import axios, {AxiosResponse} from "axios";
+import {GetTasksResponce, LoginParamsType, TaskType, TodolistType, UpdateTaskType} from "./types";
+import {ResponseType} from "./types"
 
 const settings = {
     withCredentials: true,
@@ -13,27 +15,7 @@ const instance = axios.create({
 })
 
 
-export enum TaskStatuses {
-    New = 0,
-    InProgress = 1,
-    Completed = 2,
-    Draft = 3
-}
-export enum TaskPriorities {
-    Low,
-    Middle,
-    Hi,
-    Urgently,
-    Later
-}
 
-
-
-type GetTasksResponce = {
-    error: string | null
-    totalCount: number
-    items: TaskType[]
-}
 //api
 export const todolistsAPI = {
     getTodolists() {
@@ -69,19 +51,15 @@ export const todolistsAPI = {
 }
 
 
-export type LoginParamsType = {
-    email: string
-    password: string
-    rememberMe?: boolean
-    captcha?: string
-}
 export const authAPI = {
     login(data: LoginParamsType) {
-        return instance.post<LoginParamsType, AxiosResponse<ResponseType<{userId: string}>>>('/auth/login', data);
+        const promise = instance.post<LoginParamsType, AxiosResponse<ResponseType<{userId: string}>>>('/auth/login', data);
+        return promise
 
     },
     logout() {
-        return instance.delete<ResponseType>('/auth/login');
+        const promise = instance.delete<ResponseType>('/auth/login');
+        return promise
 
     },
     me() {
@@ -90,39 +68,3 @@ export const authAPI = {
     }
 }
 
-//types
-
-export type TodolistType = {
-    id:string
-    title: string
-    addedDate?: string
-    order?: number
-}
-export type FieldErrorType = {field: string; error: string}
-export type ResponseType<D = {}> = {
-    resultCode: number
-    messages: Array<string>
-    fieldsErrors?: Array<FieldErrorType>
-    data: D
-}
-
-export type TaskType = {
-    description: string
-    title: string
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-    id: string
-    todoListId: string
-    order: number
-    addedDate: string
-}
-export type UpdateTaskType = {
-    title: string
-    description: string
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-}

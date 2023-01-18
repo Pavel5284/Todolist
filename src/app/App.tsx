@@ -1,52 +1,52 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {TaskType} from "../api/todolists-api";
-import {TodolistsList} from "../features/TodolistsList/TodolistsList";
-import {CustomizedSnackbars} from "../components/ErrorSnackbar/ErrorSnackbar";
+import {ErrorSnackbars} from "../components/ErrorSnackbar/ErrorSnackbar";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import {Navigate, Route, Routes} from "react-router-dom";
 import {
     AppBar,
     Button,
     CircularProgress,
     Container,
-    Grid,
     IconButton,
     LinearProgress,
     Toolbar,
     Typography
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import {useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch} from "./store";
-import {initializeAppTC, RequestStatusType} from "./app-reducer";
-import { Route, Routes} from "react-router-dom";
-import {Login} from "../features/Login/Login";
-import { logoutTC } from '../features/Login/auth-reducer';
+import {authActions, authSelectors, Login} from "../features/Auth";
+import {selectIsInitialized, selectStatus} from "./selectors";
+import {useActions, useAppSelector} from "../utils/redux-utils";
+import {appActions} from "../features/Application";
+import { TodolistsList } from '../features/TodolistsList';
 
-
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
 
 type PropsType = {
     demo?: boolean
 }
 
+
+
 export function App({demo = false}:PropsType) {
 
-    const status = useSelector<AppRootStateType, RequestStatusType>((state => state.app.status))
-    const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn)
-    const dispatch = useAppDispatch()
+    const status = useAppSelector(selectStatus)
+    const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn)
+    const isInitialized = useAppSelector(selectIsInitialized)
+
+
+    const {logout} = useActions(authActions)
+    const {initializeApp} = useActions(appActions)
+
+
+    const logoutHandler = useCallback(() => {
+        logout()
+    }, [])
 
     useEffect(() => {
         if (!demo) {
-            dispatch(initializeAppTC())
+            initializeApp()
         }
 
-    }, [])
-
-    const logoutHandler = useCallback(() => {
-        dispatch(logoutTC())
     }, [])
 
 
@@ -58,22 +58,18 @@ export function App({demo = false}:PropsType) {
 
     return (
             <div className="App">
-
-                <div>
-                    <CustomizedSnackbars/>
+                    <ErrorSnackbars/>
                     <AppBar position="static">
                         <Toolbar>
                             <IconButton
-                                size="large"
                                 edge="start"
                                 color="inherit"
                                 aria-label="menu"
-                                sx={{mr: 2}}
                             >
                                 <MenuIcon/>
                             </IconButton>
-                            <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                                News1
+                            <Typography variant="h6" >
+                                News
                             </Typography>
                             {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Log out</Button>}
                         </Toolbar>
@@ -81,17 +77,14 @@ export function App({demo = false}:PropsType) {
                     </AppBar>
                     <Container fixed>
                         <Routes>
-                            <Route path="/" element={<TodolistsList/>}/>
-                            <Route path="/login" element={<Login/>} />
+                            <Route path="/" element={<TodolistsList demo={demo}/>}/>
+                            <Route path="/login"   element={<Login/>} />
+                            <Route path={'*'} element={<Navigate to={'404'}/>}/>
+                            <Route path={'404'} element={<h1 style={{display: 'flex', justifyContent: 'center'}}>
+                                404: PAGE NOT FOUND
+                            </h1>}/>
                         </Routes>
-
-
                     </Container>
-
-                </div>
-
-
-
             </div>
     );
 }
