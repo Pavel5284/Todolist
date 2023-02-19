@@ -61,17 +61,19 @@ export function App({demo = false}:PropsType) {
             <div className="App">
                     <ErrorSnackbars/>
                     <AppBar position="static">
-                        <Toolbar>
-                            <IconButton
-                                edge="start"
-                                color="inherit"
-                                aria-label="menu"
-                            >
-                                <MenuIcon/>
-                            </IconButton>
-                            <Typography variant="h6" >
-                                News
-                            </Typography>
+                        <Toolbar style={{display: "flex", justifyContent: "space-between"}}>
+                            <div style={{display: "flex", alignItems: "center"}}>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    aria-label="menu"
+                                >
+                                    <MenuIcon/>
+                                </IconButton>
+                                <Typography variant="h6" >
+                                    News
+                                </Typography>
+                            </div>
                             {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Log out</Button>}
                         </Toolbar>
                         {status === 'loading' && <LinearProgress/>}

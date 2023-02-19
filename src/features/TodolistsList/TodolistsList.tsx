@@ -57,7 +57,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
             <Grid container style={{padding: "20px"}}>
                 <AddItemForm addItem={addTodolistCallback}/>
             </Grid>
-                 <Grid container spacing={3} style={{flexWrap: 'nowrap', overflowX: 'scroll'}}>
+                 <Grid container spacing={3} style={{flexWrap: 'wrap'}}>
                 {todolists.map(tl => {
                     let allTodolistsTasks = tasks[tl.id];
                     return <Grid item key={tl.id}>

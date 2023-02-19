@@ -6,13 +6,6 @@ import {AppRootStateType} from "../../utils/types";
 import {useActions} from "../../utils/redux-utils";
 import {appActions} from "../../features/CommonActions/App";
 
-/*const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-    props,
-    ref,
-) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});*/
-
 const Alert = (props: AlertProps) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />
 }
