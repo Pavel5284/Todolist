@@ -4,8 +4,12 @@ import {AddItemForm, AddItemFormSubmitHelperType} from "../../components/AddItem
 import {Todolist} from "./Todolist/Todolist";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "../Auth/selectors";
-import {useActions, useAppDispatch, useAppSelector} from "../../utils/redux-utils";
+import {useActions, useAppDispatch} from "../../utils/redux-utils";
 import {todolistsActions} from "./index";
+import { useSelector } from "react-redux";
+import { AppRootStateType } from "../../utils/types";
+import {TodolistDomainType} from "./todolists-reducer";
+import { TasksStateType } from "./tasks-reducer";
 
 
 type PropsType = {
@@ -15,9 +19,9 @@ type PropsType = {
 export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
 
     const dispatch = useAppDispatch();
-    const todolists = useAppSelector(state => state.todolists)
-    const tasks = useAppSelector(state => state.tasks)
-    const isLoggedIn = useAppSelector(selectIsLoggedIn)
+    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
+    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
 
       const {fetchTodolists, addTodolist} = useActions(todolistsActions)
 
@@ -25,7 +29,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
           let thunk = todolistsActions.addTodolist(title)
           const resultAction = await dispatch(thunk)
           if (todolistsActions.addTodolist.rejected.match(resultAction)) {
-              if (resultAction.payload?.errors?.length) {
+              if (resultAction.payload?.errors.length) {
                   const errorMessgae = resultAction.payload?.errors[0]
                   helper.setError(errorMessgae)
               } else {
@@ -51,8 +55,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
         <div>
 
             <Grid container style={{padding: "20px"}}>
-                <AddItemForm addItem={() => {
-                }}/>
+                <AddItemForm addItem={addTodolistCallback}/>
             </Grid>
                  <Grid container spacing={3} style={{flexWrap: 'nowrap', overflowX: 'scroll'}}>
                 {todolists.map(tl => {

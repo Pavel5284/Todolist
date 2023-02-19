@@ -15,10 +15,11 @@ import {
     Typography
 } from "@mui/material";
 import {authActions, authSelectors, Login} from "../features/Auth";
-import {selectIsInitialized, selectStatus} from "./selectors";
-import {useActions, useAppSelector} from "../utils/redux-utils";
+import {selectIsInitialized, selectStatus} from "../features/Application/selectors";
+import {useActions} from "../utils/redux-utils";
 import {appActions} from "../features/Application";
 import { TodolistsList } from '../features/TodolistsList';
+import {useSelector} from "react-redux";
 
 
 type PropsType = {
@@ -29,9 +30,9 @@ type PropsType = {
 
 export function App({demo = false}:PropsType) {
 
-    const status = useAppSelector(selectStatus)
-    const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn)
-    const isInitialized = useAppSelector(selectIsInitialized)
+    const status = useSelector(selectStatus)
+    const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
+    const isInitialized = useSelector(selectIsInitialized)
 
 
     const {logout} = useActions(authActions)
