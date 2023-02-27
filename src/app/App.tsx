@@ -22,13 +22,11 @@ import { TodolistsList } from '../features/TodolistsList';
 import {useSelector} from "react-redux";
 
 
-type PropsType = {
-    demo?: boolean
-}
+type PropsType = {}
 
 
 
-export function App({demo = false}:PropsType) {
+export function App(props:PropsType) {
 
     const status = useSelector(selectStatus)
     const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
@@ -44,7 +42,7 @@ export function App({demo = false}:PropsType) {
     }, [])
 
     useEffect(() => {
-        if (!demo) {
+        if (!isInitialized) {
             initializeApp()
         }
 
@@ -80,7 +78,7 @@ export function App({demo = false}:PropsType) {
                     </AppBar>
                     <Container fixed>
                         <Routes>
-                            <Route path="/" element={<TodolistsList demo={demo}/>}/>
+                            <Route path="/" element={<TodolistsList demo={false}/>}/>
                             <Route path="/login"   element={<Login/>} />
                             <Route path={'*'} element={<Navigate to={'404'}/>}/>
                             <Route path={'404'} element={<h1 style={{display: 'flex', justifyContent: 'center'}}>

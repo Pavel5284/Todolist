@@ -1,16 +1,6 @@
-import {combineReducers} from "redux";
 import {configureStore} from "@reduxjs/toolkit";
-import {todolistsReducer, tasksReducer} from "../features/TodolistsList";
-import { appReducer } from "../features/Application";
-import { authReducer } from "../features/Auth";
 import thunk from "redux-thunk";
-
-export const rootReducer = combineReducers({
-    tasks: tasksReducer,
-    todolists: todolistsReducer,
-    app: appReducer,
-    auth: authReducer,
-})
+import {rootReducer} from "./reducers";
 
 
 export const store = configureStore({
@@ -21,3 +11,9 @@ export const store = configureStore({
 
 // @ts-ignore
 window.store = store
+
+if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('./reducers', () => {
+        store.replaceReducer(rootReducer)
+    })
+}

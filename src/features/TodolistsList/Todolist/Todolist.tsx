@@ -20,16 +20,18 @@ type PropsType = {
 
 type ButtonColorType = 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
 
-export const Todolist = ({demo = false, ...props}: PropsType) => {
+export const Todolist = React.memo( ({demo = false, ...props}: PropsType) => {
       const {changeTodolistFilter, removeTodolist, changeTodolistTitle} = useActions(todolistsActions)
     const {fetchTasks} = useActions(tasksActions)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (demo) {
-            return;
+            return
         }
-        fetchTasks(props.todolist.id)
+        if (!props.tasks.length) {
+            fetchTasks(props.todolist.id)
+        }
 
     }, [])
 
@@ -107,5 +109,5 @@ export const Todolist = ({demo = false, ...props}: PropsType) => {
         </div>
 
     </Paper>
-}
+})
 
